@@ -2594,6 +2594,9 @@ void LibraryWindow::showFoldersContextMenu(const QPoint &point)
 {
     QModelIndex sourceMI = foldersModelProxy->mapToSource(foldersView->indexAt(point));
 
+    if (!sourceMI.isValid())
+        return;
+
     auto folder = foldersModel->getFolder(sourceMI);
 
     actions.setFolderAsNormalAction->setCheckable(true);
