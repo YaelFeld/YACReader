@@ -608,8 +608,7 @@ void LibraryWindow::createMenus()
     auto typeMenu = new QMenu(tr("Set type"), selectedLibrary);
 
     connect(typeMenu, &QMenu::aboutToShow, this, [=]() {
-        auto rootIndex = foldersModel->index(0, 0);
-        auto folder = foldersModel->getFolder(rootIndex);
+        auto folder = foldersModel->getRootFolder();
         setupActions(folder.type);
     });
 

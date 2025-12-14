@@ -315,6 +315,35 @@ void FolderModel::takeUpdatedChildrenInfo(FolderItem *parent, const QModelIndex 
     }
 }
 
+Folder FolderModel::folderFromItem(FolderItem *folderItem)
+{
+    auto name = folderItem->data(FolderModel::Name).toString();
+    auto parentItem = folderItem->parent();
+
+    QString path;
+    if (parentItem == nullptr) {
+        parentItem = rootItem;
+        path = "/";
+    } else {
+        path = parentItem->data(Columns::Path).toString() + "/" + name;
+    }
+
+    auto folder = Folder(folderItem->id,
+                         parentItem->id,
+                         name,
+                         path,
+                         folderItem->data(Columns::Completed).toBool(),
+                         folderItem->data(Columns::Finished).toBool(),
+                         folderItem->data(Columns::NumChildren).toInt(),
+                         folderItem->data(Columns::FirstChildHash).toString(),
+                         folderItem->data(Columns::CustomImage).toString(),
+                         folderItem->data(Columns::Type).value<YACReader::FileType>(),
+                         folderItem->data(Columns::Added).toLongLong(),
+                         folderItem->data(Columns::Updated).toLongLong());
+
+    return folder;
+}
+
 void FolderModel::reload(const QModelIndex &index)
 {
     // TODO: reload just the content under index for better efficiency
@@ -790,25 +819,23 @@ FolderModel *FolderModel::getSubfoldersModel(const QModelIndex &mi)
     return model;
 }
 
+Folder FolderModel::getRootFolder()
+{
+    if (this->rootItem == nullptr) {
+        return Folder();
+    }
+
+    return folderFromItem(this->rootItem);
+}
+
 Folder FolderModel::getFolder(const QModelIndex &mi)
 {
-    auto folderItem = static_cast<FolderItem *>(mi.internalPointer());
-    auto name = folderItem->data(FolderModel::Name).toString();
-    auto parentItem = folderItem->parent();
-    auto folder = Folder(folderItem->id,
-                         parentItem->id,
-                         name,
-                         folderItem->parent()->data(Columns::Path).toString() + "/" + name,
-                         folderItem->data(Columns::Completed).toBool(),
-                         folderItem->data(Columns::Finished).toBool(),
-                         folderItem->data(Columns::NumChildren).toInt(),
-                         folderItem->data(Columns::FirstChildHash).toString(),
-                         folderItem->data(Columns::CustomImage).toString(),
-                         folderItem->data(Columns::Type).value<YACReader::FileType>(),
-                         folderItem->data(Columns::Added).toLongLong(),
-                         folderItem->data(Columns::Updated).toLongLong());
+    if (!mi.isValid()) {
+        return Folder();
+    }
 
-    return folder;
+    auto folderItem = static_cast<FolderItem *>(mi.internalPointer());
+    return folderFromItem(folderItem);
 }
 
 QModelIndex FolderModel::getIndexFromFolderId(qulonglong folderId, const QModelIndex &parent)
