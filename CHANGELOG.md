@@ -6,6 +6,7 @@ Version counting is based on semantic versioning (Major.Feature.Patch)
 
 ### YACReaderLibrary
 * New customizable User Agent string to use it with Comic Vine. It can be set in YACReaderLibrary.ini in the [ComicVine] section using the `COMIC_VINE_USER_AGENT` key.
+* Prevent crash when opening the folders context menu if a folder is not selected.
 
 ## 9.16.1
 
