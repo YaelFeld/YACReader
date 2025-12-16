@@ -9,7 +9,7 @@
 
 class QLibrary;
 
-#define VERSION "9.16.1"
+#define VERSION "9.16.2"
 
 // Used to check if the database needs to be updated, the version is stored in the database.
 // This value is only incremented when the database structure changes.
@@ -30,6 +30,8 @@ class QLibrary;
 #define YACREADERLIBRARY_GUID "ea343ff3-2005-4865-b212-7fa7c43999b8"
 
 #define LIBRARIES "LIBRARIES"
+
+#define DEFAULT_USER_AGENT "YACReader - Yet Another Comic Reader/" VERSION
 
 #define MAX_LIBRARIES_WARNING_NUM 10
 
