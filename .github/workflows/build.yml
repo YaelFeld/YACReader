@@ -321,7 +321,7 @@ jobs:
           artifact-configuration-slug: 'zipped-files'
           github-artifact-id: ${{ steps.upload_executables.outputs.artifact-id }}
           wait-for-completion: true
-          wait-for-completion-timeout-in-seconds: "3600"
+          wait-for-completion-timeout-in-seconds: "7200"
           output-artifact-directory: release64/signed
       
       - name: Replace with signed executables
@@ -374,7 +374,7 @@ jobs:
           artifact-configuration-slug: 'zipped-files'
           github-artifact-id: ${{ steps.upload_unsigned.outputs.artifact-id }}
           wait-for-completion: true
-          wait-for-completion-timeout-in-seconds: "3600"
+          wait-for-completion-timeout-in-seconds: "7200"
           output-artifact-directory: ci/win/Output/signed
       
       - name: Replace with signed installer
@@ -487,7 +487,7 @@ jobs:
           artifact-configuration-slug: 'zipped-files'
           github-artifact-id: ${{ steps.upload_executables.outputs.artifact-id }}
           wait-for-completion: true
-          wait-for-completion-timeout-in-seconds: "3600"
+          wait-for-completion-timeout-in-seconds: "7200"
           output-artifact-directory: release64/signed
       
       - name: Replace with signed executables
@@ -540,7 +540,7 @@ jobs:
           artifact-configuration-slug: 'zipped-files'
           github-artifact-id: ${{ steps.upload_unsigned.outputs.artifact-id }}
           wait-for-completion: true
-          wait-for-completion-timeout-in-seconds: "3600"
+          wait-for-completion-timeout-in-seconds: "7200"
           output-artifact-directory: ci/win/Output/signed
       
       - name: Replace with signed installer
@@ -636,6 +636,7 @@ jobs:
           artifact-configuration-slug: 'zipped-files'
           github-artifact-id: ${{ steps.upload_executables.outputs.artifact-id }}
           wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: "7200"
           output-artifact-directory: 'release/signed'
       
       - name: Replace executables with signed versions
@@ -683,6 +684,7 @@ jobs:
           artifact-configuration-slug: 'zipped-files'
           github-artifact-id: ${{ steps.upload_unsigned.outputs.artifact-id }}
           wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: "7200"
           output-artifact-directory: 'ci/win/Output/signed'
       
       - name: Replace with signed installer and cleanup
@@ -772,7 +774,7 @@ jobs:
           artifact-configuration-slug: 'zipped-files'
           github-artifact-id: ${{ steps.upload_executables.outputs.artifact-id }}
           wait-for-completion: true
-          wait-for-completion-timeout-in-seconds: "3600"
+          wait-for-completion-timeout-in-seconds: "7200"
           output-artifact-directory: release/signed
       
       - name: Replace with signed executables
@@ -825,7 +827,7 @@ jobs:
           artifact-configuration-slug: 'zipped-files'
           github-artifact-id: ${{ steps.upload_unsigned.outputs.artifact-id }}
           wait-for-completion: true
-          wait-for-completion-timeout-in-seconds: "3600"
+          wait-for-completion-timeout-in-seconds: "7200"
           output-artifact-directory: ci/win/Output/signed
       
       - name: Replace with signed installer
