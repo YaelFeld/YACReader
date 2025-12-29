@@ -2,6 +2,11 @@
 
 Version counting is based on semantic versioning (Major.Feature.Patch)
 
+## 9.16.3 (WIP)
+
+### YACReaderLibrary
+* Fix table view last section stretch. Before it was only working randomly.
+
 ## 9.16.2
 
 ### YACReaderLibrary
