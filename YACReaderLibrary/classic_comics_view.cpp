@@ -353,6 +353,10 @@ void ClassicComicsView::updateTableView(int i)
 
 void ClassicComicsView::saveTableHeadersStatus()
 {
+    if (model == nullptr) {
+        return;
+    }
+
     settings->setValue(COMICS_VIEW_HEADERS, tableView->horizontalHeader()->saveState());
 }
 

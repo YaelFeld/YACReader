@@ -72,6 +72,7 @@ YACReader::WhatsNewDialog::WhatsNewDialog(QWidget *parent)
                   "   &#8226; Prevent crash when opening the folders context menu if a folder is not selected. (new in 9.16.2)<br/>"
                   "   &#8226; Fix crash when using the `Set type` menu on libraries. (new in 9.16.2)<br/>"
                   "   &#8226; Fix table view last section stretch. Before it was only working randomly. (new in 9.16.3)<br/>"
+                  "   &#8226; Fix empty table view caused by wront state being saved. You'll need to reconfigure the table view headers to your liking after this udpate. (new in 9.16.3)<br/>"
                   "<br/>"
                   "<span style=\"font-weight:600\">YACReaderLibraryServer</span><br/>"
                   "   &#8226; Log libraries validation when the app starts<br/>"
