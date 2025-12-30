@@ -52,6 +52,7 @@ YACReader::WhatsNewDialog::WhatsNewDialog(QWidget *parent)
                   "   &#8226; Don't use scroll animations on macOS by default, where hdpi scroll is most likely to be used<br/>"
                   "   &#8226; New toolbar on macOS<br/>"
                   "   &#8226; New mouse modes to turn pages - you can setup the app to use the left/right buttons to turn pages directly or click on the left/right part of the screen to turn pages<br/>"
+                  "   &#8226; Fix current page/time label content when the content is too long. (new in 9.16.3)<br/>"
                   "<br/>"
                   "<span style=\"font-weight:600\">YACReaderLibrary</span><br/>"
                   "   &#8226; Improve flexibility of the open comic in third party app setting so more complex commands can be used, e.g. `open -a \"/Applications/My Reader.app\" \"{comic_file_path}\"`<br/>"

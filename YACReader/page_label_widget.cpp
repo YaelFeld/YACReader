@@ -21,7 +21,7 @@ PageLabelWidget::PageLabelWidget(QWidget *parent)
 
     textLabel = new QLabel(this);
     textLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-    textLabel->setWordWrap(true); // Allow wrapping
+    textLabel->setWordWrap(false); // Wrapping needs to be disabled, we need to show all the text in one line
 
     int contentMargin = 0;
     if (verticalRes <= 1024) {
