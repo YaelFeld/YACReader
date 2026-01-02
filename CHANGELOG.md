@@ -10,6 +10,7 @@ Version counting is based on semantic versioning (Major.Feature.Patch)
 ### YACReaderLibrary
 * Fix table view last section stretch. Before it was only working randomly.
 * Fix empty table view caused by wront state being saved. You'll need to reconfigure the table view headers to your liking after this.
+* Fix open comic shortcut in fullscreen mode.
 
 ## 9.16.2
 
