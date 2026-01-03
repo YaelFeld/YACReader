@@ -2,7 +2,7 @@
 
 Version counting is based on semantic versioning (Major.Feature.Patch)
 
-## 9.16.3 (WIP)
+## 9.16.3
 
 ### YACReader
 * Fix current page/time label content when the content is too long.
