@@ -441,6 +441,9 @@ void LibraryWindowActions::createActions(LibraryWindow *window, QSettings *setti
     addToFavoritesAction->setToolTip(tr("Add selected comics to favorites list"));
     addToFavoritesAction->setIcon(QIcon(":/images/lists/default_1.svg"));
 
+    // global actions
+    window->addAction(openComicAction); // this fixes opening comics in fullscreen mode using the keyboard shortcut
+
     // actions not asigned to any widget
     window->addAction(saveCoversToAction);
     window->addAction(openContainingFolderAction);

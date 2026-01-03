@@ -46,8 +46,8 @@ ClassicComicsView::ClassicComicsView(QWidget *parent)
     stack->addWidget(searchingIcon);
 
     sVertical->addWidget(stack);
-    comics = new QWidget;
-    auto comicsLayout = new QVBoxLayout;
+    comics = new QWidget(this);
+    auto comicsLayout = new QVBoxLayout(this);
     comicsLayout->setSpacing(0);
     comicsLayout->setContentsMargins(0, 0, 0, 0);
     // TODO ComicsView:(set toolbar) comicsLayout->addWidget(editInfoToolBar);
@@ -143,6 +143,8 @@ void ClassicComicsView::setModel(ComicModel *model)
         connect(model, &ComicModel::resortedIndexes, comicFlow, &ComicFlowWidget::resortCovers, Qt::UniqueConnection);
         connect(model, &ComicModel::newSelectedIndex, this, &ClassicComicsView::setCurrentIndex, Qt::UniqueConnection);
 
+        tableView->horizontalHeader()->blockSignals(true);
+
         tableView->setModel(model);
         if (model->rowCount() > 0)
             tableView->setCurrentIndex(model->index(0, 0));
@@ -151,15 +153,12 @@ void ClassicComicsView::setModel(ComicModel *model)
         comicFlow->setImagePaths(paths);
         comicFlow->setMarks(model->getReadList());
 
-        bool loadDefaults = false;
+        bool loadDefaults = true;
         if (settings->contains(COMICS_VIEW_HEADERS)) {
             try {
                 loadDefaults = !tableView->horizontalHeader()->restoreState(settings->value(COMICS_VIEW_HEADERS).toByteArray());
             } catch (...) {
-                loadDefaults = true;
             }
-        } else {
-            loadDefaults = true;
         }
 
         if (loadDefaults) {
@@ -190,10 +189,17 @@ void ClassicComicsView::setModel(ComicModel *model)
             }
         }
 
-        tableView->resizeColumnsToContents();
         tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
         tableView->horizontalHeader()->setSectionsMovable(true);
         tableView->horizontalHeader()->setStretchLastSection(true);
+
+        for (int i = 0; i < tableView->horizontalHeader()->count() - 1; i++) {
+            if (!tableView->horizontalHeader()->isSectionHidden(i)) {
+                tableView->resizeColumnToContents(i);
+            }
+        }
+
+        tableView->horizontalHeader()->blockSignals(false);
     }
 }
 
@@ -347,6 +353,14 @@ void ClassicComicsView::updateTableView(int i)
 
 void ClassicComicsView::saveTableHeadersStatus()
 {
+    if (model == nullptr) {
+        return;
+    }
+
+    if (model->rowCount() == 0) {
+        return;
+    }
+
     settings->setValue(COMICS_VIEW_HEADERS, tableView->horizontalHeader()->saveState());
 }
 
