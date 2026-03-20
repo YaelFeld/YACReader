@@ -11,9 +11,6 @@
 #include <QCryptographicHash>
 #include <QDateTime>
 
-#include <archive.h>
-#include <archive_entry.h>
-
 const QStringList PanelDownloaderImporter::SUPPORTED_IMAGE_FORMATS = {
     "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.webp"
 };
@@ -250,46 +247,47 @@ bool PanelDownloaderImporter::convertToCBZ(const ImageSequenceComic &comic, cons
         return false;
     }
     
-    struct archive *a = archive_write_new();
-    archive_write_set_format_zip(a);
-    archive_write_open_filename(a, outputPath.toUtf8().constData());
+    // Create a temporary directory with renamed files
+    QString tempDir = QDir::tempPath() + "/yacreader_cbz_" + QString::number(QDateTime::currentDateTime().toSecsSinceEpoch());
+    QDir().mkpath(tempDir);
     
-    bool success = true;
     int pageNum = 1;
+    QStringList tempFiles;
     
     for (const QString &imagePath : comic.imageFiles) {
-        QFile file(imagePath);
-        if (!file.open(QIODevice::ReadOnly)) {
-            continue;
-        }
-        
-        QByteArray data = file.readAll();
-        file.close();
-        
-        // Determine file extension
         QString ext = QFileInfo(imagePath).suffix().toLower();
+        QString newName = QString("%1.%2").arg(pageNum, 3, 10, QChar('0')).arg(ext);
+        QString destPath = tempDir + "/" + newName;
         
-        // Create entry name (001.jpg, 002.png, etc.)
-        QString entryName = QString("%1.%2")
-            .arg(pageNum, 3, 10, QChar('0'))
-            .arg(ext);
-        
-        struct archive_entry *entry = archive_entry_new();
-        archive_entry_set_pathname(entry, entryName.toUtf8().constData());
-        archive_entry_set_size(entry, data.size());
-        archive_entry_set_filetype(entry, AE_IFREG);
-        archive_entry_set_perm(entry, 0644);
-        archive_entry_set_mtime(entry, QDateTime::currentDateTime().toSecsSinceEpoch(), 0);
-        
-        archive_write_header(a, entry);
-        archive_write_data(a, data.constData(), data.size());
-        archive_entry_free(entry);
+        if (QFile::copy(imagePath, destPath)) {
+            tempFiles.append(destPath);
+        }
         
         pageNum++;
     }
     
-    archive_write_close(a);
-    archive_write_free(a);
+    if (tempFiles.isEmpty()) {
+        return false;
+    }
+    
+    // Use system zip command to create CBZ
+    QProcess zipProcess;
+    QStringList args;
+    args << "-r" << "-j" << outputPath;
+    for (const QString &file : tempFiles) {
+        args.append(file);
+    }
+    
+    zipProcess.start("zip", args);
+    zipProcess.waitForFinished(30000);
+    
+    bool success = (zipProcess.exitCode() == 0 && QFile::exists(outputPath));
+    
+    // Cleanup temp files
+    for (const QString &file : tempFiles) {
+        QFile::remove(file);
+    }
+    QDir(tempDir).rmdir(tempDir);
     
     return success;
 }
