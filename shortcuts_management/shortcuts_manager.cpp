@@ -16,6 +16,8 @@ void ShortcutsManager::initDefaultShorcuts()
     defaultShorcuts.insert(FOCUS_SEARCH_LINE_ACTION_YL, Qt::CTRL | Qt::Key_F);
     defaultShorcuts.insert(CREATE_LIBRARY_ACTION_YL, Qt::Key_A);
     defaultShorcuts.insert(OPEN_LIBRARY_ACTION_YL, Qt::Key_O);
+    defaultShorcuts.insert(ADD_WEBDAV_LIBRARY_ACTION_YL, Qt::Key_W);
+    defaultShorcuts.insert(PANEL_DOWNLOADER_IMPORT_ACTION_YL, Qt::Key_P);
     defaultShorcuts.insert(UPDATE_LIBRARY_ACTION_YL, Qt::Key_U);
     defaultShorcuts.insert(RENAME_LIBRARY_ACTION_YL, Qt::Key_R);
     defaultShorcuts.insert(OPEN_COMIC_ACTION_YL, Qt::Key_Return);

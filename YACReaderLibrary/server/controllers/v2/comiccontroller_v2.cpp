@@ -15,6 +15,11 @@
 #include "QsLog.h"
 
 #include <typeinfo>
+#include <QTemporaryFile>
+#include <QDir>
+
+// WebDAV support
+#include "webdav_client.h"
 
 using stefanfrings::HttpRequest;
 using stefanfrings::HttpResponse;
@@ -41,18 +46,6 @@ void ComicControllerV2::service(HttpRequest &request, HttpResponse &response)
 
     bool remoteComic = path.endsWith("remote");
 
-    // TODO
-    // if(pathElements.size() == 6)
-    //{
-    //	QString action = pathElements.at(5);
-    //	if(!action.isEmpty() && (action == "close"))
-    //	{
-    //		session.dismissCurrentComic();
-    //		response.write("",true);
-    //		return;
-    //	}
-    // }
-
     YACReaderLibraries libraries = DBHelper::getLibraries();
 
     ComicDB comic = DBHelper::getComicInfo(libraryId, comicId);
@@ -63,7 +56,69 @@ void ComicControllerV2::service(HttpRequest &request, HttpResponse &response)
         return;
     }
 
-    Comic *comicFile = FactoryComic::newComic(libraries.getPath(libraryId) + comic.path);
+    QString comicFilePath;
+    bool isWebDAVLibrary = libraries.isWebDAVLibrary(static_cast<int>(libraryId));
+    
+    if (isWebDAVLibrary) {
+        // For WebDAV libraries, download the comic to a temporary file
+        QLOG_TRACE() << "Loading comic from WebDAV library:" << libraryId;
+        
+        // Get library info - we need to find the library to get WebDAV config
+        auto libList = libraries.getLibraries();
+        YACReaderLibrary webdavLib;
+        bool found = false;
+        for (const auto &lib : libList) {
+            if (lib.getLegacyId() == static_cast<int>(libraryId)) {
+                webdavLib = lib;
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            response.setStatus(404, "Library not found");
+            response.write("404 Library not found", true);
+            return;
+        }
+        
+        // Download comic from WebDAV
+        WebDAVClient webdavClient;
+        webdavClient.setServerUrl(webdavLib.getServerUrl());
+        webdavClient.setCredentials(webdavLib.getUsername(), "");  // Password should be stored securely
+        
+        QString remotePath = webdavLib.getBasePath() + comic.path;
+        QByteArray comicData = webdavClient.downloadFile(remotePath);
+        
+        if (comicData.isEmpty()) {
+            response.setStatus(404, "Failed to download comic from WebDAV");
+            response.write("404 Failed to download comic", true);
+            return;
+        }
+        
+        // Save to temporary file
+        QString tempDir = QDir::tempPath() + "/yacreader_webdav/" + webdavLib.getId().toString();
+        QDir().mkpath(tempDir);
+        
+        QFileInfo comicFileInfo(comic.path);
+        QString tempFilePath = tempDir + "/" + comicFileInfo.fileName();
+        
+        QFile tempFile(tempFilePath);
+        if (!tempFile.open(QIODevice::WriteOnly)) {
+            response.setStatus(500, "Failed to create temporary file");
+            response.write("500 Server Error", true);
+            return;
+        }
+        tempFile.write(comicData);
+        tempFile.close();
+        
+        comicFilePath = tempFilePath;
+        QLOG_TRACE() << "Comic downloaded to temporary file:" << comicFilePath;
+    } else {
+        // Local library - use path directly
+        comicFilePath = libraries.getPath(libraryId) + comic.path;
+    }
+
+    Comic *comicFile = FactoryComic::newComic(comicFilePath);
 
     if (comicFile != nullptr) {
         QThread *thread = nullptr;
@@ -78,7 +133,7 @@ void ComicControllerV2::service(HttpRequest &request, HttpResponse &response)
         connect(thread, &QThread::started, comicFile, &Comic::process);
         connect(thread, &QThread::finished, thread, &QObject::deleteLater);
 
-        comicFile->load(libraries.getPath(libraryId) + comic.path);
+        comicFile->load(comicFilePath);
 
         if (thread != nullptr)
             thread->start();

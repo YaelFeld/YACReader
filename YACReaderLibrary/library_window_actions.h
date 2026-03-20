@@ -26,6 +26,8 @@ public:
     QAction *openComicAction;
     QAction *createLibraryAction;
     QAction *openLibraryAction;
+    QAction *addWebDAVLibraryAction;
+    QAction *panelDownloaderImportAction;
 
     QAction *exportComicsInfoAction;
     QAction *importComicsInfoAction;

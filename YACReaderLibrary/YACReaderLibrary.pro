@@ -157,6 +157,13 @@ HEADERS += comic_flow.h \
   current_comic_view_helper.h \
   ip_config_helper.h \
   ../common/global_info_provider.h \
+  webdav_config_dialog.h \
+  panel_downloader_importer.h \
+  panel_downloader_dialog.h \
+    ../common/i_comic_storage.h \
+    ../common/local_comic_storage.h \
+    ../common/webdav_client.h \
+    ../common/webdav_comic_storage.h \
 
 !CONFIG(no_opengl) {
         HEADERS += ../common/gl/yacreader_flow_gl.h
@@ -245,6 +252,12 @@ SOURCES += comic_flow.cpp \
     db/query_parser.cpp \
     ip_config_helper.cpp \
     ../common/global_info_provider.cpp \
+    webdav_config_dialog.cpp \
+    panel_downloader_importer.cpp \
+    panel_downloader_dialog.cpp \
+    ../common/local_comic_storage.cpp \
+    ../common/webdav_client.cpp \
+    ../common/webdav_comic_storage.cpp \
 
 !CONFIG(no_opengl) {
     SOURCES += ../common/gl/yacreader_flow_gl.cpp

@@ -37,6 +37,8 @@
 #include "export_comics_info_dialog.h"
 #include "import_comics_info_dialog.h"
 #include "add_library_dialog.h"
+#include "webdav_config_dialog.h"
+#include "panel_downloader_dialog.h"
 #include "options_dialog.h"
 #include "help_about_dialog.h"
 #include "server_config_dialog.h"
@@ -372,6 +374,8 @@ void LibraryWindow::doDialogs()
     exportComicsInfoDialog = new ExportComicsInfoDialog(this);
     importComicsInfoDialog = new ImportComicsInfoDialog(this);
     addLibraryDialog = new AddLibraryDialog(this);
+    webdavConfigDialog = nullptr;  // Created on-demand
+    panelDownloaderDialog = nullptr;  // Created on-demand
     optionsDialog = new OptionsDialog(this);
     optionsDialog->restoreOptions(settings);
 
@@ -631,6 +635,9 @@ void LibraryWindow::createMenus()
     selectedLibrary->addAction(actions.importLibraryAction);
     YACReader::addSperator(selectedLibrary);
 
+    selectedLibrary->addAction(actions.panelDownloaderImportAction);
+    YACReader::addSperator(selectedLibrary);
+
     selectedLibrary->addAction(actions.showLibraryInfo);
 
 // MacOSX app menus
@@ -660,6 +667,10 @@ void LibraryWindow::createMenus()
 
     libraryMenu->addAction(actions.exportLibraryAction);
     libraryMenu->addAction(actions.importLibraryAction);
+
+    libraryMenu->addSeparator();
+
+    libraryMenu->addAction(actions.panelDownloaderImportAction);
 
     libraryMenu->addSeparator();
 
@@ -1806,6 +1817,47 @@ void LibraryWindow::showAddLibrary()
 {
     checkMaxNumLibraries();
     addLibraryDialog->open();
+}
+
+void LibraryWindow::showAddWebDAVLibrary()
+{
+    checkMaxNumLibraries();
+    if (!webdavConfigDialog) {
+        webdavConfigDialog = new WebDAVConfigDialog(this);
+        connect(webdavConfigDialog, &QDialog::accepted, this, [this]() {
+            // Add the WebDAV library
+            libraries.addWebDAVLibrary(
+                webdavConfigDialog->libraryName(),
+                webdavConfigDialog->serverUrl(),
+                webdavConfigDialog->username(),
+                webdavConfigDialog->basePath()
+            );
+            saveLibraries();
+            
+            // Create a local metadata folder for this library
+            QString metaFolder = YACReader::getSettingsPath() + "/webdav_libs/" + 
+                                webdavConfigDialog->libraryName();
+            QDir().mkpath(metaFolder);
+            
+            emit libraryUpgraded(webdavConfigDialog->libraryName());
+        });
+    }
+    webdavConfigDialog->open();
+}
+
+void LibraryWindow::showPanelDownloaderImport()
+{
+    if (!panelDownloaderDialog) {
+        panelDownloaderDialog = new PanelDownloaderDialog(this);
+    }
+    
+    // Set the current library as the target
+    if (!selectedLibrary.isNull()) {
+        QString libPath = libraries.getPath(selectedLibrary->currentLibraryId());
+        panelDownloaderDialog->setLibraryPath(libPath);
+    }
+    
+    panelDownloaderDialog->open();
 }
 
 void LibraryWindow::openLibrary(QString path, QString name)

@@ -99,8 +99,11 @@ void YACReaderLibraries::remove(const QString &name)
 void YACReaderLibraries::rename(const QString &oldName, const QString &newName)
 {
     auto library = std::find_if(libraries.begin(), libraries.end(), [oldName](const YACReaderLibrary &library) { return library.getName() == oldName; });
-    libraries.erase(library);
-    libraries.append(YACReaderLibrary(newName, library->getPath(), library->getLegacyId(), library->getId()));
+    if (library != libraries.end()) {
+        auto oldLibrary = *library;
+        libraries.erase(library);
+        libraries.append(YACReaderLibrary(newName, oldLibrary.getPath(), oldLibrary.getLegacyId(), oldLibrary.getId()));
+    }
 }
 
 int YACReaderLibraries::getId(const QString &name)
@@ -161,6 +164,35 @@ void YACReaderLibraries::addLibrary(const QString &name, const QString &path)
     libraries.append(YACReaderLibrary(name, path, legacyId, id));
 }
 
+void YACReaderLibraries::addWebDAVLibrary(const QString &name, const QString &serverUrl, 
+                                          const QString &username, const QString &basePath)
+{
+    int legacyId = 0;
+    foreach (YACReaderLibrary l, libraries)
+        legacyId = qMax(legacyId, l.getLegacyId());
+    legacyId++;
+
+    QUuid id = QUuid::createUuid();
+    
+    libraries.append(YACReaderLibrary(name, serverUrl, username, basePath, legacyId, id));
+}
+
+bool YACReaderLibraries::isWebDAVLibrary(int id) const
+{
+    auto library = std::find_if(libraries.cbegin(), libraries.cend(), [id](const YACReaderLibrary &library) { 
+        return library.getLegacyId() == id && library.isWebDAV(); 
+    });
+    return library != libraries.cend();
+}
+
+bool YACReaderLibraries::isWebDAVLibrary(const QString &name) const
+{
+    auto library = std::find_if(libraries.cbegin(), libraries.cend(), [name](const YACReaderLibrary &library) { 
+        return library.getName() == name && library.isWebDAV(); 
+    });
+    return library != libraries.cend();
+}
+
 void YACReaderLibraries::load()
 {
     QSettings settings(YACReader::getSettingsPath() + "/" + QCoreApplication::applicationName() + ".ini", QSettings::IniFormat);
@@ -210,11 +242,22 @@ bool YACReaderLibraries::save()
 }
 
 YACReaderLibrary::YACReaderLibrary()
+    : name(), path(), legacyId(0), id(), sourceType(LibrarySourceType::Local), 
+      serverUrl(), username(), basePath()
 {
 }
 
 YACReaderLibrary::YACReaderLibrary(const QString &name, const QString &path, int legacyId, const QUuid &id)
-    : name(name), path(path), legacyId(legacyId), id(id)
+    : name(name), path(path), legacyId(legacyId), id(id), sourceType(LibrarySourceType::Local),
+      serverUrl(), username(), basePath()
+{
+}
+
+YACReaderLibrary::YACReaderLibrary(const QString &name, const QString &serverUrl, 
+                                   const QString &username, const QString &basePath,
+                                   int legacyId, const QUuid &id)
+    : name(name), path(serverUrl), legacyId(legacyId), id(id), sourceType(LibrarySourceType::WebDAV),
+      serverUrl(serverUrl), username(username), basePath(basePath.isEmpty() ? "/" : basePath)
 {
 }
 
@@ -243,9 +286,49 @@ QUuid YACReaderLibrary::getId() const
     return id;
 }
 
+LibrarySourceType YACReaderLibrary::getSourceType() const
+{
+    return sourceType;
+}
+
+bool YACReaderLibrary::isWebDAV() const
+{
+    return sourceType == LibrarySourceType::WebDAV;
+}
+
+bool YACReaderLibrary::isLocal() const
+{
+    return sourceType == LibrarySourceType::Local;
+}
+
+QString YACReaderLibrary::getServerUrl() const
+{
+    return serverUrl;
+}
+
+QString YACReaderLibrary::getUsername() const
+{
+    return username;
+}
+
+QString YACReaderLibrary::getBasePath() const
+{
+    return basePath.isEmpty() ? "/" : basePath;
+}
+
+void YACReaderLibrary::setWebDAVConfig(const QString &url, const QString &user, const QString &bPath)
+{
+    sourceType = LibrarySourceType::WebDAV;
+    serverUrl = url;
+    username = user;
+    basePath = bPath.isEmpty() ? "/" : bPath;
+    path = url;
+}
+
 bool YACReaderLibrary::operator==(const YACReaderLibrary &other) const
 {
-    return id == other.id && name == other.name && path == other.path && legacyId == other.legacyId;
+    return id == other.id && name == other.name && path == other.path && 
+           legacyId == other.legacyId && sourceType == other.sourceType;
 }
 
 bool YACReaderLibrary::operator!=(const YACReaderLibrary &other) const
@@ -256,11 +339,30 @@ bool YACReaderLibrary::operator!=(const YACReaderLibrary &other) const
 QDataStream &operator<<(QDataStream &out, const YACReaderLibrary &library)
 {
     out << library.name << library.path << library.legacyId << library.id;
+    // Write source type as int
+    out << static_cast<int>(library.sourceType);
+    // Write WebDAV-specific fields
+    out << library.serverUrl << library.username << library.basePath;
     return out;
 }
 
 QDataStream &operator>>(QDataStream &in, YACReaderLibrary &library)
 {
     in >> library.name >> library.path >> library.legacyId >> library.id;
+    
+    // Try to read source type (for backward compatibility, default to Local if not present)
+    int sourceTypeInt;
+    if (!in.atEnd()) {
+        in >> sourceTypeInt;
+        library.sourceType = static_cast<LibrarySourceType>(sourceTypeInt);
+    } else {
+        library.sourceType = LibrarySourceType::Local;
+    }
+    
+    // Read WebDAV-specific fields (if available)
+    if (!in.atEnd()) {
+        in >> library.serverUrl >> library.username >> library.basePath;
+    }
+    
     return in;
 }

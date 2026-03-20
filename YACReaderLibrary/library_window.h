@@ -41,6 +41,8 @@ class ImportLibraryDialog;
 class ExportComicsInfoDialog;
 class ImportComicsInfoDialog;
 class AddLibraryDialog;
+class WebDAVConfigDialog;
+class PanelDownloaderDialog;
 class LibraryCreator;
 class HelpAboutDialog;
 class RenameLibraryDialog;
@@ -109,6 +111,8 @@ public:
     ExportComicsInfoDialog *exportComicsInfoDialog;
     ImportComicsInfoDialog *importComicsInfoDialog;
     AddLibraryDialog *addLibraryDialog;
+    WebDAVConfigDialog *webdavConfigDialog;
+    PanelDownloaderDialog *panelDownloaderDialog;
     LibraryCreator *libraryCreator;
     XMLInfoLibraryScanner *xmlInfoLibraryScanner;
     HelpAboutDialog *had;
@@ -233,6 +237,8 @@ public slots:
     void createLibrary();
     void create(QString source, QString dest, QString name);
     void showAddLibrary();
+    void showAddWebDAVLibrary();
+    void showPanelDownloaderImport();
     void openLibrary(QString path, QString name);
     void loadLibraries();
     void saveLibraries();

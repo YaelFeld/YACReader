@@ -54,6 +54,18 @@ void LibraryWindowActions::createActions(LibraryWindow *window, QSettings *setti
     openLibraryAction->setShortcut(ShortcutsManager::getShortcutsManager().getShortcut(OPEN_LIBRARY_ACTION_YL));
     openLibraryAction->setIcon(QIcon(addExtensionToIconPath(":/images/sidebar/openLibraryIcon")));
 
+    addWebDAVLibraryAction = new QAction(window);
+    addWebDAVLibraryAction->setToolTip(tr("Add WebDAV library (Nextcloud)"));
+    addWebDAVLibraryAction->setData(ADD_WEBDAV_LIBRARY_ACTION_YL);
+    addWebDAVLibraryAction->setShortcut(ShortcutsManager::getShortcutsManager().getShortcut(ADD_WEBDAV_LIBRARY_ACTION_YL));
+    addWebDAVLibraryAction->setIcon(QIcon(addExtensionToIconPath(":/images/sidebar/openLibraryIcon")));
+
+    panelDownloaderImportAction = new QAction(tr("Import from Panel Downloader"), window);
+    panelDownloaderImportAction->setToolTip(tr("Import comics downloaded with Panel Downloader extension"));
+    panelDownloaderImportAction->setData(PANEL_DOWNLOADER_IMPORT_ACTION_YL);
+    panelDownloaderImportAction->setShortcut(ShortcutsManager::getShortcutsManager().getShortcut(PANEL_DOWNLOADER_IMPORT_ACTION_YL));
+    panelDownloaderImportAction->setIcon(QIcon(":/images/menus_icons/importLibraryIcon.svg"));
+
     exportComicsInfoAction = new QAction(tr("Export comics info"), window);
     exportComicsInfoAction->setToolTip(tr("Export comics info"));
     exportComicsInfoAction->setData(EXPORT_COMICS_INFO_ACTION_YL);
@@ -497,6 +509,8 @@ void LibraryWindowActions::createConnections(
     QObject::connect(importLibraryAction, &QAction::triggered, window, &LibraryWindow::importLibraryPackage);
 
     QObject::connect(openLibraryAction, &QAction::triggered, window, &LibraryWindow::showAddLibrary);
+    QObject::connect(addWebDAVLibraryAction, &QAction::triggered, window, &LibraryWindow::showAddWebDAVLibrary);
+    QObject::connect(panelDownloaderImportAction, &QAction::triggered, window, &LibraryWindow::showPanelDownloaderImport);
     QObject::connect(setAsReadAction, &QAction::triggered, window, &LibraryWindow::setCurrentComicReaded);
     QObject::connect(setAsNonReadAction, &QAction::triggered, window, &LibraryWindow::setCurrentComicUnreaded);
 

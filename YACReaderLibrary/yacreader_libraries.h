@@ -5,6 +5,14 @@
 
 class YACReaderLibrary;
 
+/**
+ * @brief Enum representing the source type of a library
+ */
+enum class LibrarySourceType {
+    Local,      // Local filesystem
+    WebDAV      // WebDAV/Nextcloud server
+};
+
 class YACReaderLibraries : public QObject
 {
     Q_OBJECT
@@ -30,6 +38,13 @@ public:
     QList<YACReaderLibrary> getLibraries() const;
     QList<YACReaderLibrary> sortedLibraries() const;
     QUuid getLibraryIdFromLegacyId(int legacyId) const;
+
+    // WebDAV library support
+    void addWebDAVLibrary(const QString &name, const QString &serverUrl, 
+                          const QString &username, const QString &basePath);
+    bool isWebDAVLibrary(int id) const;
+    bool isWebDAVLibrary(const QString &name) const;
+
 public slots:
     void addLibrary(const QString &name, const QString &path);
     void load();
@@ -44,11 +59,31 @@ class YACReaderLibrary
 public:
     YACReaderLibrary();
     YACReaderLibrary(const QString &name, const QString &path, int legacyId, const QUuid &id);
+    
+    // WebDAV constructor
+    YACReaderLibrary(const QString &name, const QString &serverUrl, 
+                     const QString &username, const QString &basePath,
+                     int legacyId, const QUuid &id);
+    
     QString getName() const;
     QString getPath() const;
     QString getDBPath() const;
     int getLegacyId() const;
     QUuid getId() const;
+    
+    // Source type
+    LibrarySourceType getSourceType() const;
+    bool isWebDAV() const;
+    bool isLocal() const;
+    
+    // WebDAV-specific getters
+    QString getServerUrl() const;
+    QString getUsername() const;
+    QString getBasePath() const;
+    
+    // Setters for WebDAV
+    void setWebDAVConfig(const QString &serverUrl, const QString &username, const QString &basePath);
+    
     bool operator==(const YACReaderLibrary &other) const;
     bool operator!=(const YACReaderLibrary &other) const;
     friend QDataStream &operator<<(QDataStream &out, const YACReaderLibrary &library);
@@ -57,9 +92,17 @@ public:
 
 private:
     QString name;
-    QString path;
+    QString path;           // For local: filesystem path, for WebDAV: server URL
     int legacyId;
-    QUuid id; // stored in `id` file in .yacreaderlibrary
+    QUuid id;               // stored in `id` file in .yacreaderlibrary
+    
+    // Source type
+    LibrarySourceType sourceType;
+    
+    // WebDAV-specific fields
+    QString serverUrl;      // WebDAV server URL
+    QString username;       // WebDAV username
+    QString basePath;       // Base path on WebDAV server
 };
 
 #endif // YACREADER_LIBRARIES_H
