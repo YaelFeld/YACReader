@@ -1853,7 +1853,7 @@ void LibraryWindow::showPanelDownloaderImport()
     
     // Set the current library as the target
     if (!selectedLibrary.isNull()) {
-        QString libPath = libraries.getPath(selectedLibrary->currentLibraryId());
+        QString libPath = libraries.getPath(selectedLibrary->currentIndex());
         panelDownloaderDialog->setLibraryPath(libPath);
     }
     
