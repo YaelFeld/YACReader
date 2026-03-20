@@ -12,7 +12,10 @@ INCLUDEPATH += . \
               ./comic_vine \
               ./comic_vine/model
 
-DEFINES += SERVER_RELEASE YACREADER_LIBRARY
+DEFINES += SERVER_RELEASE YACREADER_LIBRARY NO_PDF
+
+# Disable PDF support temporarily
+CONFIG += no_pdf
 
 # load default build flags
 include (../config.pri)
