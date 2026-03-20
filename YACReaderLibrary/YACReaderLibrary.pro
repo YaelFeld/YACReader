@@ -67,7 +67,7 @@ macx {
 
 #CONFIG += release
 CONFIG -= flat
-QT += sql network widgets svg quickcontrols2 concurrent
+QT += sql network widgets svg quickcontrols2
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += openglwidgets core5compat
 
