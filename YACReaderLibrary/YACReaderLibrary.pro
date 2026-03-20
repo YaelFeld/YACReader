@@ -17,6 +17,9 @@ DEFINES += SERVER_RELEASE YACREADER_LIBRARY NO_PDF
 # Disable PDF support temporarily
 CONFIG += no_pdf
 
+# Use libarchive for compression (easier to set up than 7zip)
+CONFIG += libarchive
+
 # load default build flags
 include (../config.pri)
 include (../dependencies/pdf_backend.pri)
