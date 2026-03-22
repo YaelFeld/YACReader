@@ -1,0 +1,46 @@
+-IC:/Qt/6.10.2/msvc2022_64/mkspecs/win32-msvc
+-IC:/Users/Trish/YACReader/YACReaderLibrary
+-IC:/Users/Trish/YACReader/YACReaderLibrary
+-IC:/Users/Trish/YACReader/common
+-IC:/Users/Trish/YACReader/YACReaderLibrary/server
+-IC:/Users/Trish/YACReader/YACReaderLibrary/db
+-IC:/Users/Trish/YACReader/custom_widgets
+-IC:/Users/Trish/YACReader/YACReaderLibrary/comic_vine
+-IC:/Users/Trish/YACReader/YACReaderLibrary/comic_vine/model
+-IC:/Users/Trish/YACReader/common/gl
+-IC:/Users/Trish/YACReader/YACReaderLibrary/server
+-IC:/Users/Trish/YACReader/YACReaderLibrary/server/controllers
+-IC:/Users/Trish/YACReader/YACReaderLibrary/server/controllers/v1
+-IC:/Users/Trish/YACReader/YACReaderLibrary/server/controllers/v2
+-IC:/Users/Trish/YACReader/third_party/QtWebApp/httpserver
+-IC:/Users/Trish/YACReader/third_party/QtWebApp/templateengine
+-IC:/Users/Trish/YACReader/custom_widgets
+-IC:/Users/Trish/YACReader/compressed_archive/unarr
+-IC:/Users/Trish/YACReader/dependencies/unarr/win
+-IC:/Users/Trish/YACReader/third_party/QsLog
+-IC:/Users/Trish/YACReader/shortcuts_management
+-IC:/Users/Trish/YACReader/third_party/QrCode
+-IC:/Users/Trish/YACReader/third_party/KDToolBox
+-IC:/Qt/6.10.2/msvc2022_64/include
+-IC:/Qt/6.10.2/msvc2022_64/include/QtOpenGLWidgets
+-IC:/Qt/6.10.2/msvc2022_64/include/QtQuickWidgets
+-IC:/Qt/6.10.2/msvc2022_64/include/QtWidgets
+-IC:/Qt/6.10.2/msvc2022_64/include/QtSvg
+-IC:/Qt/6.10.2/msvc2022_64/include/QtQuickControls2
+-IC:/Qt/6.10.2/msvc2022_64/include/QtQuick
+-IC:/Qt/6.10.2/msvc2022_64/include/QtOpenGL
+-IC:/Qt/6.10.2/msvc2022_64/include/QtGui
+-IC:/Qt/6.10.2/msvc2022_64/include/QtSql
+-IC:/Qt/6.10.2/msvc2022_64/include/QtQml
+-IC:/Qt/6.10.2/msvc2022_64/include/QtNetwork
+-IC:/Qt/6.10.2/msvc2022_64/include/QtQmlIntegration
+-IC:/Qt/6.10.2/msvc2022_64/include/QtConcurrent
+-IC:/Qt/6.10.2/msvc2022_64/include/QtCore5Compat
+-IC:/Qt/6.10.2/msvc2022_64/include/QtCore
+-IC:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include
+-IC:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\VS\include
+-IC:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt
+-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um
+-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared
+-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt
+-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt
