@@ -164,12 +164,12 @@ HEADERS += comic_flow.h \
   ip_config_helper.h \
   ../common/global_info_provider.h \
   ../common/i_comic_storage.h \
-  ../common/local_comic_storage.h
-
-!win32 {
-HEADERS += webdav_config_dialog.h \
+  ../common/local_comic_storage.h \
   ../common/webdav_client.h \
   ../common/webdav_comic_storage.h
+
+!win32 {
+HEADERS += webdav_config_dialog.h
 }
 
 !win32 {
@@ -264,12 +264,12 @@ SOURCES += comic_flow.cpp \
     db/query_parser.cpp \
     ip_config_helper.cpp \
     ../common/global_info_provider.cpp \
-    ../common/local_comic_storage.cpp
-
-!win32 {
-SOURCES += webdav_config_dialog.cpp \
+    ../common/local_comic_storage.cpp \
     ../common/webdav_client.cpp \
     ../common/webdav_comic_storage.cpp
+
+!win32 {
+SOURCES += webdav_config_dialog.cpp
 }
 
 !win32 {
