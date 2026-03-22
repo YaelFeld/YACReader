@@ -115,7 +115,7 @@ QList<ComicFileInfo> LocalComicStorage::listComics(const QString &path)
     for (const auto &file : files) {
         ComicFileInfo info;
         info.name = file.fileName();
-        info.path = "/" + dir.relativeFilePath(file.filePath());
+        info.path = "/" + QDir(dirPath).relativeFilePath(file.filePath());
         info.size = file.size();
         info.lastModified = file.lastModified();
         info.hash = computeHash(file.filePath());
@@ -140,7 +140,7 @@ QList<ComicFileInfo> LocalComicStorage::listComicsRecursive(const QString &path)
         
         ComicFileInfo info;
         info.name = file.fileName();
-        info.path = "/" + dir.relativeFilePath(file.filePath());
+        info.path = "/" + QDir(dirPath).relativeFilePath(file.filePath());
         info.size = file.size();
         info.lastModified = file.lastModified();
         info.hash = computeHash(file.filePath());
@@ -226,24 +226,24 @@ bool LocalComicStorage::saveCoverImage(const QString &comicPath, const QByteArra
     return true;
 }
 
-int LocalComicStorage::getReadingProgress(const QString /*comicPath*/)
+int LocalComicStorage::getReadingProgress(const QString &comicPath)
 {
     // TODO: Integrate with YACReader's existing progress tracking
     return 0;
 }
 
-void LocalComicStorage::setReadingProgress(const QString /*comicPath*/, int /*currentPage*/, int /*totalPages*/)
+void LocalComicStorage::setReadingProgress(const QString &comicPath, int currentPage, int totalPages)
 {
     // TODO: Integrate with YACReader's existing progress tracking
 }
 
-bool LocalComicStorage::isComicRead(const QString /*comicPath*/)
+bool LocalComicStorage::isComicRead(const QString &comicPath)
 {
     // TODO: Integrate with YACReader's existing progress tracking
     return false;
 }
 
-void LocalComicStorage::markComicAsRead(const QString /*comicPath*/, bool /*read*/)
+void LocalComicStorage::markComicAsRead(const QString &comicPath, bool read)
 {
     // TODO: Integrate with YACReader's existing progress tracking
 }

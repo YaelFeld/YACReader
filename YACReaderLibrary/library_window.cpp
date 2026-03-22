@@ -37,8 +37,10 @@
 #include "export_comics_info_dialog.h"
 #include "import_comics_info_dialog.h"
 #include "add_library_dialog.h"
+#ifndef Q_OS_WIN
 #include "webdav_config_dialog.h"
 #include "panel_downloader_dialog.h"
+#endif
 #include "options_dialog.h"
 #include "help_about_dialog.h"
 #include "server_config_dialog.h"
@@ -374,8 +376,10 @@ void LibraryWindow::doDialogs()
     exportComicsInfoDialog = new ExportComicsInfoDialog(this);
     importComicsInfoDialog = new ImportComicsInfoDialog(this);
     addLibraryDialog = new AddLibraryDialog(this);
+#ifndef Q_OS_WIN
     webdavConfigDialog = nullptr;  // Created on-demand
     panelDownloaderDialog = nullptr;  // Created on-demand
+#endif
     optionsDialog = new OptionsDialog(this);
     optionsDialog->restoreOptions(settings);
 
@@ -635,8 +639,10 @@ void LibraryWindow::createMenus()
     selectedLibrary->addAction(actions.importLibraryAction);
     YACReader::addSperator(selectedLibrary);
 
+#ifndef Q_OS_WIN
     selectedLibrary->addAction(actions.panelDownloaderImportAction);
     YACReader::addSperator(selectedLibrary);
+#endif
 
     selectedLibrary->addAction(actions.showLibraryInfo);
 
@@ -670,9 +676,11 @@ void LibraryWindow::createMenus()
 
     libraryMenu->addSeparator();
 
+#ifndef Q_OS_WIN
     libraryMenu->addAction(actions.panelDownloaderImportAction);
 
     libraryMenu->addSeparator();
+#endif
 
     libraryMenu->addAction(actions.showLibraryInfo);
 
@@ -1819,6 +1827,7 @@ void LibraryWindow::showAddLibrary()
     addLibraryDialog->open();
 }
 
+#ifndef Q_OS_WIN
 void LibraryWindow::showAddWebDAVLibrary()
 {
     checkMaxNumLibraries();
@@ -1844,7 +1853,9 @@ void LibraryWindow::showAddWebDAVLibrary()
     }
     webdavConfigDialog->open();
 }
+#endif
 
+#ifndef Q_OS_WIN
 void LibraryWindow::showPanelDownloaderImport()
 {
     if (!panelDownloaderDialog) {
@@ -1859,6 +1870,7 @@ void LibraryWindow::showPanelDownloaderImport()
     
     panelDownloaderDialog->open();
 }
+#endif
 
 void LibraryWindow::openLibrary(QString path, QString name)
 {
