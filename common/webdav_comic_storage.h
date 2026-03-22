@@ -33,7 +33,7 @@ public:
     bool initialize() override;
     bool isConnected() const override { return m_connected; }
     QString storageType() const override { return "webdav"; }
-    QString storageName() const override { return m_webdavClient.serverUrl().host() + m_basePath; }
+    QString storageName() const override { return m_webdavClient.serverUrl() + m_basePath; }
 
     // Directory browsing
     QList<FolderInfo> listFolders(const QString &path = "/") override;
