@@ -70,7 +70,7 @@ QNetworkRequest WebDAVClient::createRequest(const QString &path)
     
     QNetworkRequest request(url);
     request.setRawHeader("Authorization", "Basic " + base64Credentials().toUtf8());
-    request.setRawHeader("User-Agent", "YACReader/" VERSION);
+    request.setRawHeader("User-Agent", "YACReader/1.0");
     
     return request;
 }
@@ -113,12 +113,8 @@ QNetworkReply* WebDAVClient::sendRequest(const QString &method, const QString &p
     
     QNetworkReply *reply = m_networkManager.sendCustomRequest(request, method.toUtf8(), body);
     
-    // Handle authentication challenges
-    connect(reply, &QNetworkReply::authenticationRequired,
-            this, [reply, this](const QAuthenticator &authenticator) {
-        Q_UNUSED(authenticator);
-        // We already set Basic auth in the request
-    });
+    // Authentication is handled via Basic Auth header set in createRequest()
+    // Qt 6 removed QNetworkReply::authenticationRequired signal
     
     return reply;
 }
@@ -217,7 +213,7 @@ QList<WebDAVItem> WebDAVClient::parsePropfindResponse(const QByteArray &xml)
         reader.readNext();
         
         if (reader.isStartElement()) {
-            QStringRef name = reader.name();
+            QStringView name = reader.name();
             
             if (name == "response") {
                 inResponse = true;
